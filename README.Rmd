@@ -7,7 +7,8 @@ output: github_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This repository contains the main code to reproduce the results of the paper "[Treatment-control comparisons in platform trials including non-concurrent controls](https://arxiv.org)".
+This repository contains the main code to reproduce the results of the paper "Treatment-control comparisons in platform trials including non-concurrent controls''. 
+<!-- "[Treatment-control comparisons in platform trials including non-concurrent controls](https://arxiv.org)". -->
 
 ------------------------------------------------------------------------
 

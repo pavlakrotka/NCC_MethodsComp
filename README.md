@@ -3,8 +3,9 @@ non-concurrent controls
 ================
 
 This repository contains the main code to reproduce the results of the
-paper “[Treatment-control comparisons in platform trials including
-non-concurrent controls](https://arxiv.org)”.
+paper “Treatment-control comparisons in platform trials including
+non-concurrent controls’’.
+<!-- "[Treatment-control comparisons in platform trials including non-concurrent controls](https://arxiv.org)". -->
 
 ------------------------------------------------------------------------
 
