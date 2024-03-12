@@ -221,7 +221,7 @@ p <- ggarrange(ggplot(results_i_eq_alpha_TM_step %>% filter(model=="Time machine
                  facet_grid(.~ trend) +
                  geom_line() +
                  geom_point() +
-                 labs(x=TeX("$\\lambda$"), y="Type I error rate", color=TeX("$1/\\sigma^2_\\tau$:"), linetype=TeX("$1/\\sigma^2_\\eta$:")) +
+                 labs(x=TeX("$\\lambda$"), y="Type I error rate", color=TeX("$1/\\sigma^2_\\tau$:"), linetype=TeX("$1/\\sigma^2_\\beta$:")) +
                  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
                  coord_cartesian(ylim = c(0, 0.1)) +
                  scale_color_manual(values = my_palette) +
