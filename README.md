@@ -15,9 +15,10 @@ This repository is structured as follows:
     simulations for calibration of the Time Machine and MAP Prior shown
     in Figure 4 in the main paper, and all simulations that use the
     calibration for the Time Machine assuming an expected change of 1
-    and a maximal change of 1.5. After running the script, the results
-    for the individual scenarios are then saved in the subfolder
-    *results*.
+    and a maximal change of 1.5, as well as prior parameters
+    $1/\sigma^2_{\beta}=0.001$ and $1/\sigma^2_{\tau}=0.002$ for the MAP
+    approach. After running the script, the results for the individual
+    scenarios are saved in the subfolder *results*.
   - *plots_paper.Rmd*: This file contains the code to create all figures
     for scenarios that use the above mentioned calibration of the Time
     Machine. That includes all figures in the main paper, and Figures 1
@@ -28,8 +29,10 @@ This repository is structured as follows:
 
   This folder has an analogous structure as **main_paper**, but for the
   simulations, an expected change of 0.01 and a maximal change of 0.15
-  were used for the Time Machine calibration. The resulting plots can be
-  found in the supplementary material (Figures 3-6).
+  were used for the Time Machine calibration and the prior parameters
+  for the MAP approach were set to $1/\sigma^2_{\beta}=1$ and
+  $1/\sigma^2_{\tau}=0.002$. The resulting plots can be found in the
+  supplementary material (Figures 3-6).
 
 ## NCC R-package
 
