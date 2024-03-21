@@ -7,6 +7,30 @@ paper “Treatment-control comparisons in platform trials including
 non-concurrent controls’’.
 <!-- "[Treatment-control comparisons in platform trials including non-concurrent controls](https://arxiv.org)". -->
 
+This repository is structured as follows:
+
+- Folder **main_paper**:
+
+  - *simscript.R*: This script contains the code to reproduce the
+    simulations for calibration of the Time Machine and MAP Prior shown
+    in Figure 4 in the main paper, and all simulations that use the
+    calibration for the Time Machine assuming an expected change of 1
+    and a maximal change of 1.5. After running the script, the results
+    for the individual scenarios are then saved in the subfolder
+    *results*.
+  - *plots_paper.Rmd*: This file contains the code to create all figures
+    for scenarios that use the above mentioned calibration of the Time
+    Machine. That includes all figures in the main paper, and Figures 1
+    and 2 in the supplementary material. The figures are saved in the
+    subfolder *figures*.
+
+- Folder **supp_material**:
+
+  This folder has an analogous structure as **main_paper**, but for the
+  simulations, an expected change of 0.01 and a maximal change of 0.15
+  were used for the Time Machine calibration. The resulting plots can be
+  found in the supplementary material (Figures 3-6).
+
 ## NCC R-package
 
 The version of the `NCC` [R-package](https://pavlakrotka.github.io/NCC/)
@@ -29,8 +53,8 @@ devtools::install_github("pavlakrotka/NCC@v1.2", force = TRUE, build_vignettes =
 pLatforms) project has received funding from the Innovative Medicines
 Initiative (IMI) 2 Joint Undertaking (JU) under grant agreement No
 853966. This Joint Undertaking receives support from the European
-Union’s Horizon 2020 research and innovation programme and EFPIA
-andChildren’s Tumor Foundation, Global Alliance for TB Drug Development
+Union’s Horizon 2020 research and innovation programme and EFPIA and
+Children’s Tumor Foundation, Global Alliance for TB Drug Development
 non-profit organisation, Spring works Therapeutics Inc. This publication
 reflects the authors’ views. Neither IMI nor the European Union, EFPIA,
 or any Associated Partners are responsible for any use that may be made

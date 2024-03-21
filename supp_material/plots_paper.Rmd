@@ -1,0 +1,266 @@
+---
+title: "Treatment-control comparisons in platform trials including non-concurrent controls"
+author: "Marta Bofill Roig, Pavla Krotka, Katharina Hees, Franz Koenig, Dominic Magirr, Peter Jacko, Tom Parke, Kert Viele, Martin Posch"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: yes
+    toc_depth: 3
+    toc_float: true
+    number_sections: true
+    code_folding: show 
+    theme: flatly
+---
+
+```{r setup, include = FALSE}
+library(knitr)
+opts_chunk$set(collapse = TRUE,
+               comment = "#>",
+               warning = FALSE,
+               message = FALSE,
+               echo = FALSE,
+               fig.align = "center",
+               out.width = "100%")
+```
+
+```{r, include=FALSE}
+library(tidyverse)
+library(ggpubr)
+library(scales)
+library(latex2exp)
+library(NCC)
+```
+
+
+```{r}
+# Load in all files from "results"
+
+csv_names <- list.files("results/", pattern="*.csv")
+
+for (i in 1:length(csv_names)){
+  assign(str_extract(csv_names[i], "^([^\\.])+"), read_csv(paste0("results/", csv_names[i])) %>%
+           mutate(model = as.factor(case_when(model=="fixmodel" ~ "Regression model",
+                                              model=="MAPpriorNew" ~ "MAP Prior",
+                                              model=="poolmodel" ~ "Pooled approach",
+                                              model=="sepmodel" ~ "Separate approach",
+                                              model=="timemachine" ~ "Time machine")),
+                  trend = case_when(trend=="linear" ~ "Linear time trend",
+                                    trend=="stepwise_2" ~ "Stepwise time trend",
+                                    trend=="inv_u" ~ "Inverted-U trend")))
+}
+
+my_palette = c("MAP Prior" = "#ED0000FF",
+               "Pooled approach" = "#42B540FF",
+               "Regression model" = "#00468BFF",
+               "Separate approach" = "#925E9FFF",
+               "Time machine" = "#EEAD0E",
+               "reasonable" = "mediumorchid3",
+               "small" = "#FDAF91FF",
+               "large" = "#1B1919FF",
+               `2` =  "lightpink3",
+               `0.2` = "darkred",
+               `0.002` = "skyblue4")
+
+
+#show_col(my_palette)
+
+# Prediction interval for T1E
+p <- 0.025
+alpha <- 0.05
+nsim <- 10000
+sd <- sqrt(p*(1-p)/nsim)
+z.alpha <- qnorm(1-alpha/2,0,1)
+pred_int <- c(p-z.alpha*sd,p+z.alpha*sd)
+```
+
+
+# Setting I
+
+## Equal time trends
+
+```{r, fig.width = 9, fig.height = 12}
+p <- ggarrange(ggplot(results_i_eq_alpha, 
+                      aes(color=model, linetype=as.factor(study_arm))) +
+                 annotate("rect", xmin = -Inf, xmax = Inf, ymin = pred_int[1], ymax = pred_int[2], fill = "gray54", alpha = 0.4) +
+                 facet_grid(.~ trend) +
+                 geom_line(aes(d2, reject_h0)) +
+                 geom_point(aes(d2, reject_h0)) +
+                 labs(x="d", y="Type I error rate", color="Analysis approach:", linetype="Arm under study:") +
+                 geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+                 coord_cartesian(ylim = c(0, 0.1)) +
+                 scale_color_manual(values = my_palette) +
+                 scale_x_continuous(breaks = unique(results_i_eq_alpha$d2), labels = unique(results_i_eq_alpha$d2)) + 
+                 theme_bw(base_size = 13.4) +
+                 theme(legend.position = "bottom",
+                       legend.box = "vertical"),
+               
+               ggplot(rbind(results_i_eq_pow), 
+                      aes(color=model, linetype = as.factor(study_arm))) +
+                 facet_grid(.~ trend) +
+                 geom_line(aes(d2, reject_h0)) +
+                 geom_point(aes(d2, reject_h0)) +
+                 labs(x="d", y="Power", color="Analysis approach:", linetype="Arm under study:") +
+                 coord_cartesian(ylim = c(0.7, 1)) +
+                 scale_color_manual(values = my_palette) +
+                 scale_x_continuous(breaks = unique(results_i_eq_pow$d2), labels = unique(results_i_eq_pow$d2)) +
+                 theme_bw(base_size = 13.4) +
+                 theme(legend.position = "bottom",
+                       legend.box = "vertical"),
+               
+               common.legend = T, legend = "bottom", nrow = 2) + 
+  bgcolor("white") + 
+  border("white")
+p
+
+export::graph2eps(x = p, file = "figures/i_eq_alpha_pow_d_main_old", width = 9, height = 12, cairo=TRUE, fallback_resolution=600)
+
+ggsave("figures/i_eq_alpha_pow_d_main_old.pdf", width = 9, height = 12)
+ggsave("figures/i_eq_alpha_pow_d_main_old.png", width = 9, height = 12)
+```
+
+
+
+## Different time trends
+
+```{r, fig.width = 9, fig.height = 12}
+p <- ggarrange(ggplot(results_i_diff1_alpha, aes(color=model)) +
+                 annotate("rect", xmin = -Inf, xmax = Inf, ymin = pred_int[1], ymax = pred_int[2], fill = "gray54", alpha = 0.4) +
+                 geom_line(aes(lambda1, reject_h0)) +
+                 geom_point(aes(lambda1, reject_h0)) +
+                 labs(x=TeX("$\\lambda_1$"), y="Type I error rate", color="Analysis approach:", title = "A) Different time trend in arm 1") +
+                 geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+                 facet_grid(~ trend) +
+                 scale_color_manual(values = my_palette) +
+                 scale_x_continuous(breaks = seq(min(results_i_diff1_alpha$lambda1), max(results_i_diff1_alpha$lambda1), by=0.05),
+                                    labels = seq(min(results_i_diff1_alpha$lambda1), max(results_i_diff1_alpha$lambda1), by=0.05)) +
+                 coord_cartesian(ylim = c(0, 0.1)) +
+                 theme_bw(base_size = 13.4) +
+                 theme(title = element_text(size = 12.5),
+                       legend.position = "bottom"),
+               
+               ggplot(results_i_diff12_alpha, aes(color=model)) +
+                 annotate("rect", xmin = -Inf, xmax = Inf, ymin = pred_int[1], ymax = pred_int[2], fill = "gray54", alpha = 0.4) +
+                 geom_line(aes(lambda1, reject_h0)) +
+                 geom_point(aes(lambda1, reject_h0)) +
+                 labs(x=TeX("$\\lambda_1$"), y="Type I error rate", color="Analysis approach:", title = "B) Different time trends in arms 1 and 2") +
+                 geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+                 facet_grid(~ trend) +
+                 scale_color_manual(values = my_palette) +
+                 scale_x_continuous(breaks = seq(min(results_i_diff1_alpha$lambda1), max(results_i_diff1_alpha$lambda1), by=0.05),
+                                    labels = seq(min(results_i_diff1_alpha$lambda1), max(results_i_diff1_alpha$lambda1), by=0.05)) +
+                 coord_cartesian(ylim = c(0, 0.1)) +
+                 theme_bw(base_size = 13.4) +
+                 theme(title = element_text(size = 12.5),
+                       legend.position = "bottom"),
+               
+               common.legend = T, legend = "bottom", nrow = 2) + 
+  bgcolor("white") + 
+  border("white")
+p
+
+export::graph2eps(x = p, file = "figures/i_diff1_diff12_alpha_lambda_main_old", width = 9, height = 12, cairo=TRUE, fallback_resolution=600)
+
+ggsave("figures/i_diff1_diff12_alpha_lambda_main_old.pdf", width = 9, height = 12)
+ggsave("figures/i_diff1_diff12_alpha_lambda_main_old.png", width = 9, height = 12)
+```
+
+
+
+# Setting II
+
+
+```{r, fig.width = 9, fig.height = 12}
+p <- ggarrange(ggplot(results_ii_eq_alpha, aes(color=model)) +
+                 annotate("rect", xmin = -Inf, xmax = Inf, ymin = pred_int[1], ymax = pred_int[2], fill = "gray54", alpha = 0.4) +
+                 geom_line(aes(d3, reject_h0)) +
+                 geom_point(aes(d3, reject_h0)) +
+                 labs(x=TeX("$d_3$"), y="Type I error rate", color="Analysis approach:") +
+                 geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+                 coord_cartesian(ylim = c(0, 0.1)) +
+                 facet_grid(~ trend) +
+                 scale_color_manual(values = my_palette) +
+                 scale_x_continuous(breaks = unique(results_ii_eq_alpha$d3), labels = unique(results_ii_eq_alpha$d3)) +
+                 theme_bw(base_size = 13.4),
+               
+               ggplot(results_ii_eq_pow, aes(color=model)) +
+                 geom_line(aes(d3, reject_h0)) +
+                 geom_point(aes(d3, reject_h0)) +
+                 labs(x=TeX("$d_3$"), y="Power", color="Analysis approach") +
+                 coord_cartesian(ylim = c(0.7, 1)) +
+                 facet_grid(~ trend) +
+                 scale_color_manual(values = my_palette) +
+                 scale_x_continuous(breaks = unique(results_ii_eq_pow$d3), labels = unique(results_ii_eq_pow$d3)) +
+                 theme_bw(base_size = 13.4),
+               
+               common.legend = T, legend = "bottom", nrow = 2) + 
+  bgcolor("white") + 
+  border("white")
+p
+
+export::graph2eps(x = p, file = "figures/ii_eq_alpha_pow_d_main_old", width = 9, height = 12, cairo=TRUE, fallback_resolution=600)
+
+ggsave("figures/ii_eq_alpha_pow_d_main_old.pdf", width = 9, height = 12)
+ggsave("figures/ii_eq_alpha_pow_d_main_old.png", width = 9, height = 12)
+```
+
+
+
+
+
+
+# Setting III
+
+
+```{r, fig.width = 9, fig.height = 7}
+p <- ggarrange(ggplot(results_iii_ii_rand_alpha) +
+                 annotate("rect", xmin = -Inf, xmax = Inf, ymin = pred_int[1], ymax = pred_int[2], fill = "gray54", alpha = 0.4) +
+                 geom_line(aes(lambda0, reject_h0, color=model)) +
+                 geom_point(aes(lambda0, reject_h0, color=model)) +
+                 labs(x=TeX("$\\lambda_0 = \\lambda_{10}$"), y="Type I error rate", color="Analysis approach:") +
+                 geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+                 coord_cartesian(ylim = c(0, 0.1)) +
+                 facet_grid(~ trend) +
+                 scale_color_manual(values = my_palette) +
+                 scale_x_continuous(breaks = seq(min(results_iii_ii_rand_alpha$lambda0), max(results_iii_ii_rand_alpha$lambda0), by=0.05),
+                                    labels = round(seq(min(results_iii_ii_rand_alpha$lambda0), max(results_iii_ii_rand_alpha$lambda0), by=0.05), 3)) +
+                 theme_bw(base_size = 13.4),
+               
+               ggplot(results_iii_ii_rand_pow) +
+                 geom_line(aes(lambda0, reject_h0, color=model)) +
+                 geom_point(aes(lambda0, reject_h0, color=model)) +
+                 labs(x=TeX("$\\lambda_0 = \\lambda_{10}$"), y="Power", color="Analysis approach:") +
+                 coord_cartesian(ylim = c(0.7, 1)) +
+                 facet_grid(~ trend) +
+                 scale_color_manual(values = my_palette) +
+                 scale_x_continuous(breaks = seq(min(results_iii_ii_rand_alpha$lambda0), max(results_iii_ii_rand_alpha$lambda0), by=0.05),
+                                    labels = round(seq(min(results_iii_ii_rand_alpha$lambda0), max(results_iii_ii_rand_alpha$lambda0), by=0.05), 3)) +
+                 theme_bw(base_size = 13.4),
+               
+               common.legend = T, legend = "bottom") + 
+  bgcolor("white") + 
+  border("white")
+p
+
+export::graph2eps(x = p, file = "figures/iii_ii_rand_alpha_pow_lambda_main_old", width = 9, height = 7, cairo=TRUE, fallback_resolution=600)
+
+ggsave("figures/iii_ii_rand_alpha_pow_lambda_main_old.pdf", width = 9, height = 7)
+ggsave("figures/iii_ii_rand_alpha_pow_lambda_main_old.png", width = 9, height = 7)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
