@@ -165,7 +165,7 @@ p <- ggarrange(ggplot(results_i_eq_alpha %>% filter(trend=="Stepwise time trend"
                  facet_grid(.~ trend) +
                  geom_line(aes(d2, reject_h0)) +
                  geom_point(aes(d2, reject_h0)) +
-                 labs(x="d", y="Type I error rate", color="Analysis approach:", linetype="Arm under study:") +
+                 labs(x="d", y="Type 1 error rate", color="Analysis approach:", linetype="Arm under study:") +
                  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
                  coord_cartesian(ylim = c(0, 0.1)) +
                  scale_color_manual(values = my_palette) +
@@ -206,7 +206,7 @@ p <- ggarrange(ggplot(results_i_eq_alpha %>% filter(trend!="Stepwise time trend"
                  facet_grid(.~ trend) +
                  geom_line(aes(d2, reject_h0)) +
                  geom_point(aes(d2, reject_h0)) +
-                 labs(x="d", y="Type I error rate", color="Analysis approach:", linetype="Arm under study:") +
+                 labs(x="d", y="Type 1 error rate", color="Analysis approach:", linetype="Arm under study:") +
                  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
                  coord_cartesian(ylim = c(0, 0.1)) +
                  scale_color_manual(values = my_palette) +
@@ -246,7 +246,7 @@ p <- ggarrange(ggplot(results_i_eq_alpha_TM %>% filter(model=="Time machine"),
                  facet_grid(.~ trend) +
                  geom_line() +
                  geom_point() +
-                 labs(x=TeX("$\\lambda$"), y="Type I error rate", color="Assumed time drifts:") +
+                 labs(x=TeX("$\\lambda$"), y="Type 1 error rate", color="Assumed time drifts:") +
                  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
                  coord_cartesian(ylim = c(0, 0.1)) +
                  scale_color_manual(values = my_palette) +
@@ -262,7 +262,7 @@ p <- ggarrange(ggplot(results_i_eq_alpha_TM %>% filter(model=="Time machine"),
                  facet_grid(.~ trend) +
                  geom_line() +
                  geom_point() +
-                 labs(x=TeX("$\\lambda$"), y="Type I error rate", color=TeX("$1/\\sigma^2_\\tau$:"), linetype=TeX("$1/\\sigma^2_\\beta$:")) +
+                 labs(x=TeX("$\\lambda$"), y="Type 1 error rate", color=TeX("$1/\\sigma^2_\\tau$:"), linetype=TeX("$1/\\sigma^2_\\beta$:")) +
                  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
                  coord_cartesian(ylim = c(0, 0.1)) +
                  scale_color_manual(values = my_palette) +
@@ -288,7 +288,7 @@ p <- ggarrange(ggplot(results_i_diff1_alpha %>% filter(trend=="Stepwise time tre
                  annotate("rect", xmin = -Inf, xmax = Inf, ymin = pred_int[1], ymax = pred_int[2], fill = "gray54", alpha = 0.4) +
                  geom_line(aes(lambda1, reject_h0)) +
                  geom_point(aes(lambda1, reject_h0)) +
-                 labs(x=TeX("$\\lambda_1$"), y="Type I error rate", color="Analysis approach:", title = "A) Different time trend in arm 1") +
+                 labs(x=TeX("$\\lambda_1$"), y="Type 1 error rate", color="Analysis approach:", title = "A) Different time trend in arm 1") +
                  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
                  facet_grid(~ trend) +
                  scale_color_manual(values = my_palette) +
@@ -303,7 +303,7 @@ p <- ggarrange(ggplot(results_i_diff1_alpha %>% filter(trend=="Stepwise time tre
                  annotate("rect", xmin = -Inf, xmax = Inf, ymin = pred_int[1], ymax = pred_int[2], fill = "gray54", alpha = 0.4) +
                  geom_line(aes(lambda1, reject_h0)) +
                  geom_point(aes(lambda1, reject_h0)) +
-                 labs(x=TeX("$\\lambda_1$"), y="Type I error rate", color="Analysis approach:", title = "B) Different time trends in arms 1 and 2") +
+                 labs(x=TeX("$\\lambda_1$"), y="Type 1 error rate", color="Analysis approach:", title = "B) Different time trends in arms 1 and 2") +
                  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
                  facet_grid(~ trend) +
                  scale_color_manual(values = my_palette) +
@@ -333,7 +333,7 @@ p <- ggarrange(ggplot(results_i_diff1_alpha %>% filter(trend!="Stepwise time tre
                  annotate("rect", xmin = -Inf, xmax = Inf, ymin = pred_int[1], ymax = pred_int[2], fill = "gray54", alpha = 0.4) +
                  geom_line(aes(lambda1, reject_h0)) +
                  geom_point(aes(lambda1, reject_h0)) +
-                 labs(x=TeX("$\\lambda_1$"), y="Type I error rate", color="Analysis approach:", title = "A) Different time trend in arm 1") +
+                 labs(x=TeX("$\\lambda_1$"), y="Type 1 error rate", color="Analysis approach:", title = "A) Different time trend in arm 1") +
                  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
                  facet_grid(~ trend) +
                  scale_color_manual(values = my_palette) +
@@ -348,7 +348,7 @@ p <- ggarrange(ggplot(results_i_diff1_alpha %>% filter(trend!="Stepwise time tre
                  annotate("rect", xmin = -Inf, xmax = Inf, ymin = pred_int[1], ymax = pred_int[2], fill = "gray54", alpha = 0.4) +
                  geom_line(aes(lambda1, reject_h0)) +
                  geom_point(aes(lambda1, reject_h0)) +
-                 labs(x=TeX("$\\lambda_1$"), y="Type I error rate", color="Analysis approach:", title = "B) Different time trends in arms 1 and 2") +
+                 labs(x=TeX("$\\lambda_1$"), y="Type 1 error rate", color="Analysis approach:", title = "B) Different time trends in arms 1 and 2") +
                  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
                  facet_grid(~ trend) +
                  scale_color_manual(values = my_palette) +
@@ -382,7 +382,7 @@ p <- ggarrange(ggplot(results_ii_eq_alpha, aes(color=model)) +
                  annotate("rect", xmin = -Inf, xmax = Inf, ymin = pred_int[1], ymax = pred_int[2], fill = "gray54", alpha = 0.4) +
                  geom_line(aes(d3, reject_h0)) +
                  geom_point(aes(d3, reject_h0)) +
-                 labs(x=TeX("$d_3$"), y="Type I error rate", color="Analysis approach:") +
+                 labs(x=TeX("$d_3$"), y="Type 1 error rate", color="Analysis approach:") +
                  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
                  coord_cartesian(ylim = c(0, 0.1)) +
                  facet_grid(~ trend) +
@@ -424,7 +424,7 @@ p <- ggarrange(ggplot(results_iii_ii_rand_alpha) +
                  annotate("rect", xmin = -Inf, xmax = Inf, ymin = pred_int[1], ymax = pred_int[2], fill = "gray54", alpha = 0.4) +
                  geom_line(aes(lambda0, reject_h0, color=model)) +
                  geom_point(aes(lambda0, reject_h0, color=model)) +
-                 labs(x=TeX("$\\lambda_0 = \\lambda_{10}$"), y="Type I error rate", color="Analysis approach:") +
+                 labs(x=TeX("$\\lambda_0 = \\lambda_{10}$"), y="Type 1 error rate", color="Analysis approach:") +
                  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
                  coord_cartesian(ylim = c(0, 0.1)) +
                  facet_grid(~ trend) +
